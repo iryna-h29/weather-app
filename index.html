@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://kit.fontawesome.com/3c12136e98.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-7">
+          <form id="enter-city-form">
+            <input
+            type="text"
+            class="form-control"
+            placeholder="Type a city.."
+            aria-describedby="passwordHelpBlock"
+            id="enter-city"
+              />
+            </div>
+            <div class="col-2">
+              <input class="search-button" type="submit" value="Search" id="search-city" />
+            </div>
+          </form>
+        <div class="col-1">
+          <button class="location-btn" id="location-button">
+            <i class="fa-solid fa-location-dot fa-xl location-icon"></i>
+          </button>
+        </div>
+        <div class="col-1">
+            <i class="fa-solid fa-house fa-xl hometown-icon" title="Show the weather of my hometown"></i>
+        </div>
+        <div class="col-1">
+          <div class="language">
+            EN
+          </div>
+        </div>
+      </div>
+      <div class="form-text">
+        <a class="suggested-cities-link" href="">Kyiv</a>
+        <a class="suggested-cities-link" href="">Budapest</a>
+        <a class="suggested-cities-link" href="">Warsaw</a>
+        <a class="suggested-cities-link" href="">Prague</a>
+        <a class="suggested-cities-link" href="">Lviv</a>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+          <div class="icon-current-weather">
+            <img src="src/icons/sun_weather.png" alt="sun" />
+          </div>
+        </div>
+        <div class="col-4 current-temperature">
+          <span class="degree" id="degree">+19</span><span class="degrees-symbols"><span class="celsius">&#8451</span> | <span class="fahrenheit">&#8457</span></span>
+        </div>
+        <div class="col-5 online-city">
+          <span class=current-city id="current-city">Dnipro</span>
+          <!-- <i class="fa-solid fa-house fa-xl hometown-icon" title="Select as my hometown"></i> -->
+          <br />
+          <span class="weekday-time"><span class="theday">wednesday</span> <span class="time">14:00</span>
+          <br />
+          <span class="today"><span class="month">July</span> <span class="date" id="date">13</span></span>
+        </div>
+        <div class="col-1"></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-5 weather-conditions">
+          <span class="descr" id="descr">Clear</span>
+          <br />
+          <span class="wind">Wind: <span class="wind-speed">3</span> km/hour</span>
+          <br />
+          <span class="clouds">Clouds: <span class="clouds-percent">1</span>%</span>
+          <br />
+          <span class="precipitations">precipitation: <span class="precipitation-percent">40</span>%</span>
+        </div>
+        <!-- <div class="col-2">
+            <i class="fa-solid fa-wind fa-2xl wind-icon"></i>
+        </div> -->
+        <div class="col-7"></div>
+      </div>
+    </div>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col" id="first-day">
+          <div class="box">
+            <div class="weekday">Wed</div>
+            <div class="data">14.07</div>
+            <div class="weather-icon">☀️
+            </div>
+            <div class="upper-bound">+35&#8451</div>
+            <div class="lower-bound">+25&#8451</div>
+          </div>
+        </div>
+        <div class="col" id="second-day">
+          <div class="box">
+            <div class="weekday">Thurs</div>
+            <div class="data">15.07</div>
+            <div class="weather-icon">⛅</div>
+            <div class="upper-bound">+20&#8451</div>
+            <div class="lower-bound">+15&#8451</div>
+          </div>
+        </div>
+        <div class="col" id="third-day">
+          <div class="box">
+            <div class="weekday">Fri</div>
+            <div class="data">16.07</div>
+            <div class="weather-icon">☁️</div>
+            <div class="upper-bound">+15&#8451</div>
+            <div class="lower-bound">+13&#8451</div>
+          </div>
+        </div>
+        <div class="col" id="forth-day">
+          <div class="box">
+            <div class="weekday">Sat</div>
+            <div class="data">17.07</div>
+            <div class="weather-icon">🌧️</div>
+            <div class="upper-bound">+10&#8451</div>
+            <div class="lower-bound">+5&#8451</div>
+          </div>
+        </div>
+        <div class="col" id="fifth-day">
+          <div class="box">
+            <div class="weekday">Sun</div>
+            <div class="data">18.07</div>
+            <div class="weather-icon">🌨️</div>
+            <div class="upper-bound">0&#8451</div>
+            <div class="lower-bound">-3&#8451</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <body>
+    <script src="src/index.js"></script>
+  </body>
+</html>

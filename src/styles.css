@@ -1,0 +1,194 @@
+section {
+  font-family: "Nunito", sans-serif;
+  padding: 30px;
+  width: 700px;
+  margin: 0 auto;
+  margin-top: 30px;
+  height: max-content;
+  background: linear-gradient(359.3deg, rgb(196, 214, 252) 1%, rgba(187, 187, 187, 0) 70.9%);
+  /* linear-gradient(178.6deg, rgb(232, 245, 253) 3.3%, rgb(252, 253, 255) 109.6%); */
+  /* linear-gradient(to top, #dfe9f3 0%, white 100%); */
+  border-color: blue;
+  border-radius: 6px;
+}
+.row {
+  align-items: center;
+}
+#enter-city {
+  margin-top: 5px;
+  margin-left: 30px;
+  border: solid 4px #42a5f5;
+  /*width: 350px;*/
+}
+.location-icon {
+  position: relative;
+  /* margin-left: 23px; */
+  color: #6B68CE;
+}
+.location-icon:hover {
+  color: #ff70b5;
+  cursor: pointer;
+}
+.location-btn {
+  display: block;
+  background-color: transparent;
+  border-color:rgba(187, 187, 187, 0);
+  margin-left: 25px;
+}
+.hometown-icon {
+  color: #6b68ce;
+  margin-left: 10px;
+}
+.hometown-icon:hover {
+  color: #ff70b5;
+  cursor: pointer;
+}
+.language {
+  margin-left: 8px;
+  width: 27px;
+  color: #328bd0;
+  font-size: 18px;
+  font-weight: 800;
+  background-color: #c4e0f4;
+  border-radius: 3px;
+}
+.language:hover {
+  color: #ff70b5;
+  cursor: pointer;
+  border: solid 1px #4c7ce5;
+}
+.form-text {
+  margin-left: 24px;
+}
+a {
+  color: #656c7e;
+  font-size: 16px;
+}
+#suggested-cities {
+  width: max-content;
+}
+.suggested-cities-link {
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.search-button {
+  margin-left: 20px;
+  width: 90px;
+  height: 49px;
+  border-radius: 50px;
+  border: solid 5px #596aca;
+  background-color: #eff1f4;
+  color: #42a5f5;
+  font-weight: 900;
+  font-size: 17px;
+  box-shadow: 1px 1px 1px 1px #011e6f;
+}
+.search-button:hover {
+  color: #ff70b5;
+}
+.search-button:active {
+  border-color: #1f4690;
+}
+.icon-current-weather {
+  margin-top: 10px;
+}
+.current-temperature {
+  font-weight: 600;
+  margin-left: 8px;
+  margin-top: 50px;
+}
+.degree {
+  font-size: 44px;
+}
+.degrees-symbols {
+  font-size: 25px;
+  position: relative;
+  vertical-align: top;
+}
+.celsius:hover {
+  color: #a29ff1;
+  cursor: pointer;
+}
+.fahrenheit {
+  color: grey;
+}
+.fahrenheit:hover {
+  color: #a29ff1;
+  cursor: pointer;
+}
+.online-city {
+  text-align: center;
+}
+.current-city {
+  font-size: 44px;
+  font-weight: bold;
+}
+.current-city:hover {
+  cursor: pointer;
+  color: #588bf9;
+}
+.online-city .hometown-icon {
+  color: #a29ff1;
+  /* position: relative;
+  bottom: 7px; */
+}
+.online-city .date {
+  font-size: 18px;
+}
+.online-city .today {
+  font-size: 18px;
+}
+.online-city .weekday-time {
+  font-size: 18px;
+}
+.weather-conditions {
+  margin-left: 30px;
+  margin-top: 10px;
+  color: #328bd0;
+}
+.descr {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2b77b0;
+}
+.wind-icon {
+  color: #7ec2fa;
+  margin-bottom: 50px;
+}
+.box {
+  height: 220px;
+  border: solid 4px #42a5f5;
+  border-radius: 3px;
+  margin-top: 20px;
+  text-align: center;
+  color: #42a5f5;
+}
+.box:hover {
+  border-color: #328bd0;
+  /* box-shadow: 1px 1px 1px 1px #2487d3; */
+  transition: 200ms;
+  cursor: pointer;
+}
+.box .weekday {
+  color: #ff3e6e;
+  font-size: 24px;
+  font-weight: 800;
+}
+.box .data {
+  color: #ff3e6e;
+  font-size: 20px;
+  font-weight: 600;
+}
+.box .weather-icon {
+  font-size: 40px;
+}
+.box .upper-bound {
+  color: #2f9cf5;
+  font-size: 24px;
+  font-weight: 600;
+}
+.box .lower-bound {
+  font-size: 20px;
+  font-weight: 600;
+}
