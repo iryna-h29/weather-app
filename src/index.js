@@ -68,6 +68,8 @@ function displayWeather(response) {
   let clouds = document.querySelector(".clouds-percent");
   clouds.innerHTML = Math.round(response.data.clouds.all); 
   console.log(response.data);
+  let mainIcon = document.querySelector("#main-icon");
+  mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
 }
 function searchCityTemperature(event) {
   event.preventDefault();
