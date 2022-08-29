@@ -54,8 +54,8 @@ currentTime.innerHTML = `${hours}:${minutes}`;
 // display the current temp of the city using API
 function displayWeather(response) {
   let degree = document.querySelector("#degree");
-  let temp =  Math.round(response.data.main.temp);
-  degree.innerHTML = temp;
+  celsiusTemp =  response.data.main.temp;
+  degree.innerHTML = Math.round(celsiusTemp);
   let currentCity = document.querySelector("#current-city");
   currentCity.innerHTML = response.data.name;
 
@@ -101,25 +101,28 @@ locationIcon.addEventListener("click", getLocation);
 
 function changeToCelsius(event) {
   event.preventDefault();
-  let degree = document.querySelector("span.degree");
-  if (degree === "+19") {
-    degree.innerHTML = "+66";
-  } else {
-    degree.innerHTML = "+19";
-  }
+  let degreeElement = document.querySelector("#degree");
+  degreeElement.innerHTML = Math.round(celsiusTemp);
+  fahrenheitSymbol.classList.remove("active");
+  fahrenheitSymbol.classList.toggle("inactive");
+  celsiusSymbol.classList.remove("inactive");
+  celsiusSymbol.classList.toggle("active");
 }
+
 
 function changeToFahrenheit(event) {
   event.preventDefault();
-  let degree = document.querySelector("span.degree");
-  if (degree === "+66") {
-    degree.innerHTML = "+19";
-  } else {
-    degree.innerHTML = "+66";
-  }
+  let degreeElement = document.querySelector("#degree");
+  let fahrenheitTemp = (celsiusTemp * 9) / 5 + 32;
+  degreeElement.innerHTML = Math.round(fahrenheitTemp);
+  fahrenheitSymbol.classList.remove("inactive");
+  fahrenheitSymbol.classList.toggle("active");
+  celsiusSymbol.classList.remove("active");
+  celsiusSymbol.classList.toggle("inactive");
 }
-let celsius = document.querySelector("span.celsius");
-let fahrenheit = document.querySelector("span.fahrenheit");
-celsius.addEventListener("click", changeToCelsius);
-fahrenheit.addEventListener("click", changeToFahrenheit);
+let celsiusTemp = null;
+let celsiusSymbol = document.querySelector("#celsius");
+let fahrenheitSymbol = document.querySelector("#fahrenheit");
+celsiusSymbol.addEventListener("click", changeToCelsius);
+fahrenheitSymbol.addEventListener("click", changeToFahrenheit);
 

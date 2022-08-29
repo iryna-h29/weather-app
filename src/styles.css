@@ -106,16 +106,15 @@ a {
   position: relative;
   vertical-align: top;
 }
-.celsius:hover {
-  color: #a29ff1;
-  cursor: pointer;
-}
-.fahrenheit {
+.inactive {
   color: grey;
 }
-.fahrenheit:hover {
-  color: #a29ff1;
+.inactive:hover {
+  color: black;
   cursor: pointer;
+}
+.active {
+  color: #42a5f5;
 }
 .online-city {
   margin-top: 20px;
