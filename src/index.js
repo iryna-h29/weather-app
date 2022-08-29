@@ -70,6 +70,7 @@ function displayWeather(response) {
   console.log(response.data);
   let mainIcon = document.querySelector("#main-icon");
   mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
+  mainIcon.setAttribute("alt",`http://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png` );
 }
 function searchCityTemperature(event) {
   event.preventDefault();
@@ -107,9 +108,9 @@ function changeToCelsius(event) {
     degree.innerHTML = "+19";
   }
 }
+
 function changeToFahrenheit(event) {
   event.preventDefault();
-
   let degree = document.querySelector("span.degree");
   if (degree === "+66") {
     degree.innerHTML = "+19";
