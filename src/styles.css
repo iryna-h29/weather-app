@@ -118,6 +118,7 @@ a {
   cursor: pointer;
 }
 .online-city {
+  margin-top: 20px;
   text-align: center;
 }
 .current-city {
