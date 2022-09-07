@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="col-3 current-temperature">
-          <span class="degree" id="degree"></span><span class="degrees-symbols"><span class="celsius active" id="celsius">&#8451</span> | <span class=" fahrenheit inactive" id="fahrenheit">&#8457</span></span>
+          <span class="degree" id="degree"></span><span class="degrees-symbols" id="degree-symbols"><span class="celsius active" id="celsius">&#8451</span> <span class=" fahrenheit inactive" id="fahrenheit">&#8457</span></span>
         </div>
         <div class="col-6 online-city">
           <span class=current-city id="current-city">Hi! Check the Weather</span>
@@ -85,14 +85,14 @@
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-5 weather-conditions">
-          <span class="descr" id="descr">Clear</span>
+        <div class="col-5 weather-conditions" id="weather-conditions">
+          <span class="descr" id="descr"></span>
           <br />
-          <span class="wind">Wind: <span class="wind-speed">3</span> km/hour</span>
+          <span class="wind">wind: <span class="wind-speed">3</span> km/hour</span>
           <br />
-          <span class="clouds">Clouds: <span class="clouds-percent">1</span>%</span>
+          <span class="clouds">clouds: <span class="clouds-percent">1</span>%</span>
           <br />
-          <span class="precipitations">precipitation: <span class="precipitation-percent">40</span>%</span>
+          <span class="humidity">humidity: <span class="humidity-percent">40</span>%</span>
         </div>
         <!-- <div class="col-2">
             <i class="fa-solid fa-wind fa-2xl wind-icon"></i>
@@ -100,55 +100,7 @@
         <div class="col-7"></div>
       </div>
     </div>
-    <div class="container text-center">
-      <div class="row">
-        <div class="col" id="first-day">
-          <div class="box">
-            <div class="weekday">Wed</div>
-            <div class="data">14.07</div>
-            <div class="weather-icon">☀️
-            </div>
-            <div class="upper-bound">+35&#8451</div>
-            <div class="lower-bound">+25&#8451</div>
-          </div>
-        </div>
-        <div class="col" id="second-day">
-          <div class="box">
-            <div class="weekday">Thurs</div>
-            <div class="data">15.07</div>
-            <div class="weather-icon">⛅</div>
-            <div class="upper-bound">+20&#8451</div>
-            <div class="lower-bound">+15&#8451</div>
-          </div>
-        </div>
-        <div class="col" id="third-day">
-          <div class="box">
-            <div class="weekday">Fri</div>
-            <div class="data">16.07</div>
-            <div class="weather-icon">☁️</div>
-            <div class="upper-bound">+15&#8451</div>
-            <div class="lower-bound">+13&#8451</div>
-          </div>
-        </div>
-        <div class="col" id="forth-day">
-          <div class="box">
-            <div class="weekday">Sat</div>
-            <div class="data">17.07</div>
-            <div class="weather-icon">🌧️</div>
-            <div class="upper-bound">+10&#8451</div>
-            <div class="lower-bound">+5&#8451</div>
-          </div>
-        </div>
-        <div class="col" id="fifth-day">
-          <div class="box">
-            <div class="weekday">Sun</div>
-            <div class="data">18.07</div>
-            <div class="weather-icon">🌨️</div>
-            <div class="upper-bound">0&#8451</div>
-            <div class="lower-bound">-3&#8451</div>
-          </div>
-        </div>
-      </div>
+    <div class="container text-center" id="forecast">
     </div>
   </section>
   <div class="container">
@@ -159,6 +111,7 @@
     </div>
   </div>
   <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
     <script src="src/index.js"></script>
   </body>
 </html>

@@ -1,5 +1,6 @@
+$( "#degree-symbols" ).fadeOut();
+$( "#weather-conditions" ).fadeOut();
 // display the current dates
-
 let weekDays = [
   "Sunday",
   "Monday",
@@ -42,17 +43,58 @@ if (minutes < 10) {
 }
 currentTime.innerHTML = `${hours}:${minutes}`;
 
-// Change-city-value
-
-// function searchCity(event) {
-//   event.preventDefault();
-//   let enterCity = document.querySelector("#enter-city");
-//   let currentCity = document.querySelector("#current-city");
-//   currentCity.innerHTML = enterCity.value;
-// }
-
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDay();
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return days[day];
+}
+function formatDate(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDate();
+  return day;
+}
+function formatMonth(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let month = date.getMonth();
+  let months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  return months[month];
+}
+// Inject data from js to HTML
+function displayForecast(response) {
+  let forecast = response.data.daily;
+  console.log(forecast);
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = `<div class="row">`;
+  forecast.forEach(function(forecastDay, index){
+    if (index < 5) {
+      forecastHTML = forecastHTML + `
+      <div class="col" id="first-day">
+      <div class="box">
+      <div class="weekday">${formatDay(forecastDay.dt)}</div>
+      <div class="data">${formatDate(forecastDay.dt)}.${formatMonth(forecastDay.dt)}</div>
+      <img src="http://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${forecastDay.weather[0].description}@2x.png" width="60">
+      <div class="upper-bound">${Math.round(forecastDay.temp.max)}&deg</div>
+      <div class="lower-bound">${Math.round(forecastDay.temp.min)}&deg</div>
+      </div>
+      </div>
+      `;
+    }
+  })
+  forecastHTML = forecastHTML + `</div>`
+  forecastElement.innerHTML = forecastHTML;
+}
+function getForecast(coordinates) {
+  console.log(coordinates);
+  let apiKey = "b94116045137cd3444d68aeb165f20bc";
+  let apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+  console.log(apiUrl);
+  axios.get(apiUrl).then(displayForecast);
+}
 // display the current temp of the city using API
 function displayWeather(response) {
+  $( "#degree-symbols" ).fadeIn();
+  $( "#weather-conditions" ).fadeIn();
   let degree = document.querySelector("#degree");
   celsiusTemp =  response.data.main.temp;
   degree.innerHTML = Math.round(celsiusTemp);
@@ -67,10 +109,16 @@ function displayWeather(response) {
 
   let clouds = document.querySelector(".clouds-percent");
   clouds.innerHTML = Math.round(response.data.clouds.all); 
+
+  let humidity = document.querySelector(".humidity-percent");
+  humidity.innerHTML = Math.round(response.data.main.humidity);
+
   console.log(response.data);
+
   let mainIcon = document.querySelector("#main-icon");
   mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
   mainIcon.setAttribute("alt",`http://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png` );
+  getForecast(response.data.coord);
 }
 function searchCityTemperature(event) {
   event.preventDefault();
@@ -125,4 +173,5 @@ let celsiusSymbol = document.querySelector("#celsius");
 let fahrenheitSymbol = document.querySelector("#fahrenheit");
 celsiusSymbol.addEventListener("click", changeToCelsius);
 fahrenheitSymbol.addEventListener("click", changeToFahrenheit);
+
 
