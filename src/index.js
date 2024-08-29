@@ -120,9 +120,9 @@ function displayWeather(response) {
   // console.log(response.data);
 
   let mainIconWrapper = document.querySelector(".icon-current-weather");
+  const iconFound = response.data.weather[0].icon;
   if (mainIconWrapper.hasChildNodes() === false) {
-    console.log(response.data.weather[0].icon);
-    const iconFound = response.data.weather[0].icon;
+    // console.log(response.data.weather[0].icon);
     if (iconFound === "10d" || iconFound === "01d" || iconFound === "02d") {
       const iconLink = iconsLinks[iconFound];
       mainIconWrapper.insertAdjacentHTML('afterbegin', 
@@ -134,8 +134,14 @@ function displayWeather(response) {
     }
   } else {
     const mainIcon = mainIconWrapper.querySelector('img');
-    mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
-    mainIcon.setAttribute("alt",`${response.data.weather[0].description}` );
+    if (iconFound === "10d" || iconFound === "01d" || iconFound === "02d") {
+      const iconLink = iconsLinks[iconFound];
+      mainIcon.setAttribute("src",`${iconLink}`);
+      mainIcon.setAttribute("alt",`${response.data.weather[0].description}` );
+    } else {
+      mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
+      mainIcon.setAttribute("alt",`${response.data.weather[0].description}` );
+    }
   }
   getForecast(response.data.coord);
 }
