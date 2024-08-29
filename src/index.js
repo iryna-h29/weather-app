@@ -115,9 +115,17 @@ function displayWeather(response) {
 
   console.log(response.data);
 
-  let mainIcon = document.querySelector("#main-icon");
-  mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
-  mainIcon.setAttribute("alt",`http://openweathermap.org/img/wn/${response.data.weather[0].description}@2x.png` );
+  let mainIconWrapper = document.querySelector(".icon-current-weather");
+  if (mainIconWrapper.hasChildNodes() === false) {
+    console.log(response);
+    mainIconWrapper.insertAdjacentHTML('afterbegin', 
+      `<img src='http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png'
+      alt='${response.data.weather[0].description}'>`);
+  } else {
+    const mainIcon = mainIconWrapper.querySelector('img');
+    mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
+    mainIcon.setAttribute("alt",`${response.data.weather[0].description}` );
+  }
   getForecast(response.data.coord);
 }
 function searchCityTemperature(event) {

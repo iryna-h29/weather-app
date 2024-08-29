@@ -1,15 +1,15 @@
-section {
+main {
   font-family: "Nunito", sans-serif;
   padding: 30px;
-  width: 700px;
   margin: 0 auto;
-  margin-top: 30px;
   height: max-content;
-  background: linear-gradient(359.3deg, rgb(196, 214, 252) 1%, rgba(187, 187, 187, 0) 70.9%);
+  background: url(./img/flower-sunset.jpg) center center/cover no-repeat;
+  /* linear-gradient(359.3deg, rgb(196, 214, 252) 1%, rgba(187, 187, 187, 0) 70.9%); */
   /* linear-gradient(178.6deg, rgb(232, 245, 253) 3.3%, rgb(252, 253, 255) 109.6%); */
   /* linear-gradient(to top, #dfe9f3 0%, white 100%); */
   border-color: blue;
   border-radius: 6px;
+  min-height: 100vh;
 }
 .row {
   align-items: center;
@@ -26,13 +26,14 @@ section {
   color: #6B68CE;
 }
 .location-icon:hover {
-  color: #ff70b5;
+  color: white ;
   cursor: pointer;
+  /* #ff70b5 */
 }
 .location-btn {
   display: block;
   background-color: transparent;
-  border-color:rgba(187, 187, 187, 0);
+  border-color: transparent;
   margin-left: 25px;
 }
 .hometown-icon {
@@ -40,7 +41,7 @@ section {
   margin-left: 10px;
 }
 .hometown-icon:hover {
-  color: #ff70b5;
+  color: white;
   cursor: pointer;
 }
 .language {
@@ -92,6 +93,10 @@ a {
 }
 .icon-current-weather {
   margin-top: 10px;
+  img {
+    width: 200px;
+    height: 200px;
+  }
 }
 .current-temperature {
   font-weight: 600;
@@ -100,21 +105,28 @@ a {
 }
 .degree {
   font-size: 44px;
+  color: white;
+  text-shadow: 2px 2px 9px black;
 }
 .degrees-symbols {
-  font-size: 25px;
+  font-size: 25px;  
   position: relative;
   vertical-align: top;
+  color: white;
+  text-shadow: 2px 2px 2px black;
 }
 .inactive {
   color: rgba(0, 0, 0, 0.3);
+  text-shadow: none;
 }
 .inactive:hover {
-  color: #42a5f5;
   cursor: pointer;
+  color: rgb(232, 229, 229);
+  text-shadow: 2px 2px 2px black;
 }
 .active {
-  color:black ;
+  color: white;
+  text-shadow: 2px 2px 2px black;
 }
 .online-city {
   margin-top: 20px;
@@ -123,6 +135,8 @@ a {
 .current-city {
   font-size: 44px;
   font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 9px black;
 }
 .current-city:hover {
   cursor: pointer;
@@ -141,16 +155,20 @@ a {
 }
 .online-city .weekday-time {
   font-size: 18px;
+  color: white;
+  text-shadow: 2px 2px 4px black;
+  font-weight: bold;
 }
 .weather-conditions {
   margin-left: 30px;
   margin-top: 10px;
-  color: #328bd0;
+  color: white;
+  text-shadow: 3px 3px 10px black;
+  font-weight: bold;
 }
 .descr {
   font-size: 18px;
-  font-weight: bold;
-  color: #2b77b0;
+  color: white;
 }
 .wind-icon {
   color: #7ec2fa;
@@ -162,16 +180,18 @@ a {
   border-radius: 10px;
   margin-top: 20px;
   text-align: center;
-  color: #42a5f5;
+  color: white;
+  text-shadow: 2px 2px 2px black;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   transition: 200ms;
+  background-color: rgb(0, 0, 0, 0.4);
 }
 .box:hover {
-  border-color: #7ac0f6;
+  border-color: #b0d9f9;
   /* box-shadow: 1px 1px 1px 1px #2487d3; */
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-
+  transform: scale(1.1);
 }
 .box .weekday {
   color: #ff3e6e;
@@ -179,7 +199,6 @@ a {
   font-weight: 800;
 }
 .box .data {
-  color: black;
   font-size: 20px;
   font-weight: 600;
 }
@@ -187,11 +206,9 @@ a {
   font-size: 40px;
 }
 .box .upper-bound {
-  color: black;
   font-size: 24px;
 }
 .box .lower-bound {
-  color: #67abe7;
   font-size: 20px;
 }
 .code-link-section {
@@ -199,4 +216,10 @@ a {
   margin: 0 auto;
   display: block;
   text-align: center;
+}
+
+@media(max-width: 600px) {
+    .container {
+      width: 100%;
+    }
 }
