@@ -24,7 +24,11 @@ let months = [
   "November",
   "December"
 ];
-
+let iconsLinks = {
+  "01d" : 'src/icons/sun.png',
+  "02d" : 'src/icons/sun-cloud.png',
+  "10d" : 'src/icons/rainy-day.png'
+}  
 let now = new Date();
 let currentDate = document.querySelector("span.date");
 currentDate.innerHTML = now.getDate();
@@ -63,7 +67,7 @@ function formatMonth(timestamp) {
 // Inject data from js to HTML
 function displayForecast(response) {
   let forecast = response.data.daily;
-  console.log(forecast);
+  // console.log(forecast);
   let forecastElement = document.querySelector("#forecast");
   let forecastHTML = `<div class="row">`;
   forecast.forEach(function(forecastDay, index){
@@ -85,10 +89,10 @@ function displayForecast(response) {
   forecastElement.innerHTML = forecastHTML;
 }
 function getForecast(coordinates) {
-  console.log(coordinates);
+  // console.log(coordinates);
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
-  console.log(apiUrl);
+  // console.log(apiUrl);
   axios.get(apiUrl).then(displayForecast);
 }
 // display the current temp of the city using API
@@ -113,14 +117,21 @@ function displayWeather(response) {
   let humidity = document.querySelector(".humidity-percent");
   humidity.innerHTML = Math.round(response.data.main.humidity);
 
-  console.log(response.data);
+  // console.log(response.data);
 
   let mainIconWrapper = document.querySelector(".icon-current-weather");
   if (mainIconWrapper.hasChildNodes() === false) {
-    console.log(response);
-    mainIconWrapper.insertAdjacentHTML('afterbegin', 
-      `<img src='http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png'
-      alt='${response.data.weather[0].description}'>`);
+    console.log(response.data.weather[0].icon);
+    const iconFound = response.data.weather[0].icon;
+    if (iconFound === "10d" || iconFound === "01d" || iconFound === "02d") {
+      const iconLink = iconsLinks[iconFound];
+      mainIconWrapper.insertAdjacentHTML('afterbegin', 
+        `<img src='${iconLink}' alt='${response.data.weather[0].description}'>`);
+    } else {
+      mainIconWrapper.insertAdjacentHTML('afterbegin', 
+        `<img src='http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png'
+        alt='${response.data.weather[0].description}'>`);
+    }
   } else {
     const mainIcon = mainIconWrapper.querySelector('img');
     mainIcon.setAttribute("src",`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png` );
