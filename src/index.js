@@ -28,7 +28,19 @@ let iconsLinks = {
   "01d" : 'src/icons/sun.png',
   "02d" : 'src/icons/sun-cloud.png',
   "10d" : 'src/icons/rainy-day.png'
-}  
+} 
+const descriptions = {
+  'clear': 'src/img/sunny.jpg',
+  'clouds': 'src/img/clouds.jpg',
+  'thunderstorm': 'src/img/thunder.jpg',
+  'rain': 'src/img/rain.jpg',
+  'drizze': 'src/img/rain.jpg',
+  'mist': 'src/img/mist.jpg',
+  'fog': 'src/img/mist.jpg',
+  'mist': 'src/img/mist.jpg',
+  'snow': 'src/img/snow.jpg',
+  'sleet': 'src/img/snow.jpg'
+}
 let now = new Date();
 let currentDate = document.querySelector("span.date");
 currentDate.innerHTML = now.getDate();
@@ -71,7 +83,7 @@ function displayForecast(response) {
   let forecastElement = document.querySelector("#forecast");
   let forecastHTML = `<div class="row">`;
   forecast.forEach(function(forecastDay, index){
-    if (index < 5) {
+    if (index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col" id="first-day">
       <div class="box">
@@ -117,7 +129,7 @@ function displayWeather(response) {
   let humidity = document.querySelector(".humidity-percent");
   humidity.innerHTML = Math.round(response.data.main.humidity);
 
-  // console.log(response.data);
+  console.log(response.data);
 
   let mainIconWrapper = document.querySelector(".icon-current-weather");
   const iconFound = response.data.weather[0].icon;
@@ -143,6 +155,9 @@ function displayWeather(response) {
       mainIcon.setAttribute("alt",`${response.data.weather[0].description}` );
     }
   }
+
+  const currentBackground = getCurrentBackgroundByTheWeather(response.data.weather[0].description);
+  console.log(currentBackground);
   getForecast(response.data.coord);
 }
 function searchCityTemperature(event) {
@@ -192,6 +207,9 @@ function changeToFahrenheit(event) {
   fahrenheitSymbol.classList.toggle("active");
   celsiusSymbol.classList.remove("active");
   celsiusSymbol.classList.toggle("inactive");
+}
+function getCurrentBackgroundByTheWeather(descr) {
+  
 }
 let celsiusTemp = null;
 let celsiusSymbol = document.querySelector("#celsius");
