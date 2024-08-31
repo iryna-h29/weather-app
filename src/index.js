@@ -117,6 +117,8 @@ function displayWeather(response) {
   let currentCity = document.querySelector("#current-city");
   currentCity.innerHTML = response.data.name;
 
+  currentCity.insertAdjacentHTML("beforeend", `<span class="country-code">(${response.data.sys.country})</span>`);
+
   let descr = document.querySelector("#descr");
   descr.innerHTML = response.data.weather[0].description;
 
@@ -157,7 +159,10 @@ function displayWeather(response) {
   }
 
   const currentBackground = getCurrentBackgroundByTheWeather(response.data.weather[0].description);
-  console.log(currentBackground);
+  if (currentBackground) {
+    const main = document.querySelector("main");
+    main.style.background = `url(${currentBackground}) center center/cover no-repeat`;
+  }
   getForecast(response.data.coord);
 }
 function searchCityTemperature(event) {
@@ -209,7 +214,13 @@ function changeToFahrenheit(event) {
   celsiusSymbol.classList.toggle("inactive");
 }
 function getCurrentBackgroundByTheWeather(descr) {
-  
+  return Object.entries(descriptions).find((conditionArr) => {
+    for (let word of descr.split(" ")) {
+      if (conditionArr[0] === word) {
+        return conditionArr;
+      }
+    }
+  })[1];
 }
 let celsiusTemp = null;
 let celsiusSymbol = document.querySelector("#celsius");

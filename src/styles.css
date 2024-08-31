@@ -142,6 +142,9 @@ a {
   cursor: pointer;
   color: #588bf9;
 }
+.country-code {
+  margin-left: 3px;
+}
 .online-city .hometown-icon {
   color: #a29ff1;
   /* position: relative;
@@ -218,8 +221,23 @@ a {
   text-align: center;
 }
 
-@media(max-width: 600px) {
-    .container {
-      width: 100%;
-    }
+@media(max-width: 580px) {
+  main {
+    padding: 30px 0;
+  }
+  .container {
+    padding: 0;
+  }
+  input#enter-city.form-control {
+    margin: 0;
+  }
+  .search-button {
+    margin: 0;
+  }
+  .location-btn {
+    margin-left: 10px;
+  }
+  .current-city {
+    font-size: 30px;
+  }
 }

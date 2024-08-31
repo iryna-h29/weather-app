@@ -26,8 +26,8 @@
   <body>
   <main>
     <div class="container">
-      <div class="row">
-        <div class="col-7">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
           <form id="enter-city-form">
             <input
             type="search"
@@ -36,20 +36,17 @@
             id="enter-city"
             autocomplete="off"
             />
-            </div>
-            <div class="col-2">
-              <input type="submit" class="search-button" value="Search" id="search-city" />
-            </div>
-          </form>
-        <div class="col-1">
+        </div>
+        <div class="col-md-2">
+          <input type="submit" class="search-button" value="Search" id="search-city" />
+        </div>
+        </form>
+        <div class="col-md-1">
           <button class="location-btn" id="location-button">
             <i class="fa-solid fa-location-dot fa-xl location-icon"></i>
           </button>
         </div>
-        <div class="col-1">
-            <i class="fa-solid fa-house fa-xl hometown-icon" title="Show the weather of my hometown"></i>
-        </div>
-        <div class="col-1">
+        <div class="col-md-1">
           <div class="language">
             EN
           </div>
@@ -68,7 +65,7 @@
           <span class="degree" id="degree"></span><span class="degrees-symbols" id="degree-symbols"><span class="celsius active" id="celsius">&#8451</span> <span class=" fahrenheit inactive" id="fahrenheit">&#8457</span></span>
         </div>
         <div class="col-6 online-city">
-          <span class=current-city id="current-city">Hi! Check the Weather</span>
+          <h1 class=current-city id="current-city">Hi! Check the Weather</h1>
           <!-- <i class="fa-solid fa-house fa-xl hometown-icon" title="Select as my hometown"></i> -->
           <br />
           <span class="weekday-time"><span class="theday">wednesday</span> <span class="time">14:00</span>
