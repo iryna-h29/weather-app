@@ -30,14 +30,14 @@ let iconsLinks = {
   "10d" : 'src/icons/rainy-day.png'
 } 
 const descriptions = {
-  'clear': 'src/img/sunny.jpg',
+  'clear': 'src/img/clear.jpg',
   'clouds': 'src/img/clouds.jpg',
   'thunderstorm': 'src/img/thunder.jpg',
   'rain': 'src/img/rain.jpg',
   'drizze': 'src/img/rain.jpg',
   'mist': 'src/img/mist.jpg',
   'fog': 'src/img/mist.jpg',
-  'mist': 'src/img/mist.jpg',
+  'smoke': 'src/img/mist.jpg',
   'snow': 'src/img/snow.jpg',
   'sleet': 'src/img/snow.jpg'
 }

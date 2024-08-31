@@ -75,8 +75,6 @@ a {
 }
 .search-button {
   margin-left: 20px;
-  width: 90px;
-  height: 49px;
   border-radius: 50px;
   border: solid 5px #596aca;
   background-color: #eff1f4;
@@ -239,5 +237,22 @@ a {
   }
   .current-city {
     font-size: 30px;
+  }
+  .icon-current-weather {
+    img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  .degree {
+    font-size: 20px;
+  }
+  .degrees-symbols {
+    font-size: 18px;
+  }
+}
+@media(max-width: 420px) {
+  .current-city {
+    font-size: 20px;
   }
 }

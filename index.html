@@ -26,27 +26,29 @@
   <body>
   <main>
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
+      <div class="row justify-content-sm-center justify-content-start m-0">
+        <div class="col-7 col-sm-6 p-md-5">
           <form id="enter-city-form">
             <input
             type="search"
             class="form-control"
-            placeholder="Type a city.."
+            placeholder="Enter a city or country..."
             id="enter-city"
             autocomplete="off"
             />
         </div>
-        <div class="col-md-2">
-          <input type="submit" class="search-button" value="Search" id="search-city" />
+        <div class="col-1 col-sm-1 p-0">
+          <button class="search-button" id="search-city" >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
         </div>
         </form>
-        <div class="col-md-1">
+        <div class="col-1 col-sm-1 p-0">
           <button class="location-btn" id="location-button">
             <i class="fa-solid fa-location-dot fa-xl location-icon"></i>
           </button>
         </div>
-        <div class="col-md-1">
+        <div class="col-1 col-sm-1 p-0">
           <div class="language">
             EN
           </div>
@@ -57,7 +59,7 @@
       </div>
     </div>
     <div class="container">
-      <div class="row">
+      <div class="row m-0">
         <div class="col-2">
           <div class="icon-current-weather"></div>
         </div>
@@ -65,7 +67,7 @@
           <span class="degree" id="degree"></span><span class="degrees-symbols" id="degree-symbols"><span class="celsius active" id="celsius">&#8451</span> <span class=" fahrenheit inactive" id="fahrenheit">&#8457</span></span>
         </div>
         <div class="col-6 online-city">
-          <h1 class=current-city id="current-city">Hi! Check the Weather</h1>
+          <h1 class=current-city id="current-city">The Weather Forecast</h1>
           <!-- <i class="fa-solid fa-house fa-xl hometown-icon" title="Select as my hometown"></i> -->
           <br />
           <span class="weekday-time"><span class="theday">wednesday</span> <span class="time">14:00</span>
