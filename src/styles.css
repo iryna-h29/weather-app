@@ -3,9 +3,9 @@ main {
   padding: 30px;
   margin: 0 auto;
   height: max-content;
-  background: url(./img/flower-sunset.jpg) center center/cover no-repeat;
-  /* linear-gradient(359.3deg, rgb(196, 214, 252) 1%, rgba(187, 187, 187, 0) 70.9%); */
+  background: linear-gradient(178.6deg, rgb(181, 222, 248) 3.3%, rgb(252, 253, 255) 109.6%);
   /* linear-gradient(178.6deg, rgb(232, 245, 253) 3.3%, rgb(252, 253, 255) 109.6%); */
+  /* linear-gradient(359.3deg, rgb(196, 214, 252) 1%, rgba(187, 187, 187, 0) 70.9%); */
   /* linear-gradient(to top, #dfe9f3 0%, white 100%); */
   border-color: blue;
   border-radius: 6px;
@@ -95,6 +95,11 @@ a {
     width: 200px;
     height: 200px;
   }
+  .animation-icons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
 }
 .current-temperature {
   font-weight: 600;
@@ -112,6 +117,7 @@ a {
   vertical-align: top;
   color: white;
   text-shadow: 2px 2px 2px black;
+  display: none;
 }
 .inactive {
   color: rgba(0, 0, 0, 0.3);
@@ -166,6 +172,27 @@ a {
   color: white;
   text-shadow: 3px 3px 10px black;
   font-weight: bold;
+  display: none;
+}
+.hourly-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  scrollbar-color: #5193f5  #eff1f4;
+  scrollbar-width: thin;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  background-color: rgb(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding-bottom: 10px;
+  margin-top: 10px;
+}
+.hour-box div {
+  color:white;
+  text-align: center;
+  text-shadow: 2px 2px 2px black;
+  /* filter: invert(1); */
+  /* mix-blend-mode: difference; */
 }
 .descr {
   font-size: 18px;
@@ -254,5 +281,8 @@ a {
 @media(max-width: 420px) {
   .current-city {
     font-size: 20px;
+  }
+  span, .descr {
+    font-size: 12px;
   }
 }

@@ -1,5 +1,5 @@
-$( "#degree-symbols" ).fadeOut();
-$( "#weather-conditions" ).fadeOut();
+// $( "#degree-symbols" ).fadeOut();
+// $( "#weather-conditions" ).fadeOut();
 // display the current dates
 let weekDays = [
   "Sunday",
@@ -26,8 +26,13 @@ let months = [
 ];
 let iconsLinks = {
   "01d" : 'src/icons/sun.png',
+  "01n" : 'src/icons/moon.svg',
   "02d" : 'src/icons/sun-cloud.png',
-  "10d" : 'src/icons/rainy-day.png'
+  "03d" : 'src/icons/cloud.svg',
+  "04d" : 'src/icons/cloud.svg',
+  "04n" : 'src/icons/cloud.svg',
+  "10d" : 'src/icons/rainy-day.png',
+  "09d" : 'src/icons/heavy-rain.svg'
 } 
 const descriptions = {
   'clear': 'src/img/clear.jpg',
@@ -41,6 +46,7 @@ const descriptions = {
   'snow': 'src/img/snow.jpg',
   'sleet': 'src/img/snow.jpg'
 }
+
 let now = new Date();
 let currentDate = document.querySelector("span.date");
 currentDate.innerHTML = now.getDate();
@@ -50,6 +56,11 @@ let currentDay = document.querySelector("span.theday");
 currentDay.innerHTML = weekDays[now.getDay()];
 let currentTime = document.querySelector("span.time");
 let hours = now.getHours();
+let searchForm = document.querySelector("#enter-city-form");
+searchForm.addEventListener("submit", searchCityTemperature);
+let locationIcon = document.querySelector("#location-button");
+locationIcon.addEventListener("click", getLocation);
+
 if (hours < 10) {
   hours = `0${hours}`;
 }
@@ -58,7 +69,11 @@ if (minutes < 10) {
    minutes = `0${minutes}`
 }
 currentTime.innerHTML = `${hours}:${minutes}`;
-
+function formatHours(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let hours = date.getHours();
+  return `${hours}:00`;
+}
 function formatDay(timestamp) {
   let date = new Date(timestamp * 1000);
   let day = date.getDay();
@@ -78,11 +93,38 @@ function formatMonth(timestamp) {
 }
 // Inject data from js to HTML
 function displayForecast(response) {
-  let forecast = response.data.daily;
-  // console.log(forecast);
+  let forecastDaily = response.data.daily;
+  console.log(response.data.hourly);
+  // formatHours(response.data.hourly[0].dt);
+  let forecastHourly = response.data.hourly;
+  let forecastHourlyElement = document.querySelector(".weather-hourly");
+  let forecastHourlyHTML = `<div class="hourly-wrapper">`;
+  forecastHourly.forEach((hour, index) => {
+    if (index === 0) {
+      forecastHourlyHTML = forecastHourlyHTML + `
+      <div class='hour-box'>
+        <div>NOW</div>
+        <div>${hour.humidity}%</div>
+        <img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${hour.weather[0].description}@2x.png" width="60">
+        <div>${Math.round(hour.temp)}</div>
+      </div>
+      `;
+    } else if (index >= 1 && index < 25) {
+      forecastHourlyHTML = forecastHourlyHTML + `
+      <div class='hour-box'>
+        <div>${formatHours(hour.dt)}</div>
+        <div>${hour.humidity}%</div>
+        <img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${hour.weather[0].description}@2x.png" width="60">
+        <div>${Math.round(hour.temp)}&deg</div>
+      </div>
+      `;
+    }
+  })
+  forecastHourlyHTML = forecastHourlyHTML + "</div>";
+  forecastHourlyElement.innerHTML = forecastHourlyHTML;
   let forecastElement = document.querySelector("#forecast");
   let forecastHTML = `<div class="row">`;
-  forecast.forEach(function(forecastDay, index){
+  forecastDaily.forEach(function(forecastDay, index){
     if (index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col" id="first-day">
@@ -109,8 +151,8 @@ function getForecast(coordinates) {
 }
 // display the current temp of the city using API
 function displayWeather(response) {
-  $( "#degree-symbols" ).fadeIn();
-  $( "#weather-conditions" ).fadeIn();
+  $( "#degree-symbols" ).show();
+  $( "#weather-conditions" ).show();
   let degree = document.querySelector("#degree");
   celsiusTemp =  response.data.main.temp;
   degree.innerHTML = Math.round(celsiusTemp);
@@ -131,13 +173,13 @@ function displayWeather(response) {
   let humidity = document.querySelector(".humidity-percent");
   humidity.innerHTML = Math.round(response.data.main.humidity);
 
-  console.log(response.data);
 
   let mainIconWrapper = document.querySelector(".icon-current-weather");
   const iconFound = response.data.weather[0].icon;
-  if (mainIconWrapper.hasChildNodes() === false) {
+  console.log(iconFound);
+  if (mainIconWrapper.children.length === 0) {
     // console.log(response.data.weather[0].icon);
-    if (iconFound === "10d" || iconFound === "01d" || iconFound === "02d") {
+    if (Object.keys(iconsLinks).includes(iconFound)) {
       const iconLink = iconsLinks[iconFound];
       mainIconWrapper.insertAdjacentHTML('afterbegin', 
         `<img src='${iconLink}' alt='${response.data.weather[0].description}'>`);
@@ -148,7 +190,7 @@ function displayWeather(response) {
     }
   } else {
     const mainIcon = mainIconWrapper.querySelector('img');
-    if (iconFound === "10d" || iconFound === "01d" || iconFound === "02d") {
+    if (Object.keys(iconsLinks).includes(iconFound)) {
       const iconLink = iconsLinks[iconFound];
       mainIcon.setAttribute("src",`${iconLink}`);
       mainIcon.setAttribute("alt",`${response.data.weather[0].description}` );
@@ -173,8 +215,7 @@ function searchCityTemperature(event) {
   axios.get(url).then(displayWeather);
 }
 
-let searchForm = document.querySelector("#enter-city-form");
-searchForm.addEventListener("submit", searchCityTemperature);
+
 // get current Location and find the weather
 function getCurrentLocation(position) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
@@ -187,8 +228,7 @@ function getLocation(event) {
   event.preventDefault();
   navigator.geolocation.getCurrentPosition(getCurrentLocation);
 }
-let locationIcon = document.querySelector("#location-button");
-locationIcon.addEventListener("click", getLocation);
+
 
 // Celsius - Fah
 
@@ -197,9 +237,9 @@ function changeToCelsius(event) {
   let degreeElement = document.querySelector("#degree");
   degreeElement.innerHTML = Math.round(celsiusTemp);
   fahrenheitSymbol.classList.remove("active");
-  fahrenheitSymbol.classList.toggle("inactive");
+  fahrenheitSymbol.classList.add("inactive");
   celsiusSymbol.classList.remove("inactive");
-  celsiusSymbol.classList.toggle("active");
+  celsiusSymbol.classList.add("active");
 }
 
 
@@ -209,9 +249,9 @@ function changeToFahrenheit(event) {
   let fahrenheitTemp = (celsiusTemp * 9) / 5 + 32;
   degreeElement.innerHTML = Math.round(fahrenheitTemp);
   fahrenheitSymbol.classList.remove("inactive");
-  fahrenheitSymbol.classList.toggle("active");
+  fahrenheitSymbol.classList.add("active");
   celsiusSymbol.classList.remove("active");
-  celsiusSymbol.classList.toggle("inactive");
+  celsiusSymbol.classList.add("inactive");
 }
 function getCurrentBackgroundByTheWeather(descr) {
   return Object.entries(descriptions).find((conditionArr) => {
