@@ -27,7 +27,9 @@ let iconsLinks = {
   "01d" : 'src/icons/sun.png',
   "01n" : 'src/icons/moon.svg',
   "02d" : 'src/icons/sun-cloud.png',
+  "02n" : 'src/icons/cloud-moon.svg',
   "03d" : 'src/icons/cloud.svg',
+  "03n" : 'src/icons/cloud.svg',
   "04d" : 'src/icons/cloud.svg',
   "04n" : 'src/icons/cloud.svg',
   "10d" : 'src/icons/rainy-day.png',
@@ -38,7 +40,7 @@ const descriptions = {
   'clouds': 'src/img/clouds.jpg',
   'thunderstorm': 'src/img/thunder.jpg',
   'rain': 'src/img/rain.jpg',
-  'drizze': 'src/img/rain.jpg',
+  'drizzle': 'src/img/rain.jpg',
   'mist': 'src/img/mist.jpg',
   'fog': 'src/img/mist.jpg',
   'smoke': 'src/img/mist.jpg',
@@ -47,31 +49,50 @@ const descriptions = {
 }
 
 let now = new Date();
-let currentDate = document.querySelector("span.date");
-currentDate.innerHTML = now.getDate();
-let currentMonth = document.querySelector("span.month");
-currentMonth.innerHTML = months[now.getMonth()];
-let currentDay = document.querySelector("span.theday");
-currentDay.innerHTML = weekDays[now.getDay()];
-let currentTime = document.querySelector("span.time");
-let hours = now.getHours();
+
+function getCurrentLocalTime(timestamp) {
+  console.log(timestamp);
+  let currentDate = document.querySelector("span.date");
+  currentDate.innerHTML = timestamp.getDate();
+  let currentMonth = document.querySelector("span.month");
+  currentMonth.innerHTML = months[timestamp.getMonth()];
+  let currentDay = document.querySelector("span.theday");
+  currentDay.innerHTML = weekDays[timestamp.getDay()];
+  let currentTime = document.querySelector("span.time");
+  let hours = timestamp.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  let minutes = timestamp.getMinutes();
+  if (minutes < 10) {
+     minutes = `0${minutes}`
+  }
+  currentTime.innerHTML = `${hours}:${minutes}`;
+}
+
+function convertTime(date, offset) {
+  console.log(offset);
+  if (offset) {
+    offset = parseFloat(offset);
+  } else {
+    offset = 0;
+  }
+  
+  date.setHours(date.getHours() + (date.getTimezoneOffset() / 60) + offset);
+  date.setMinutes(date.getMinutes() + (date.getTimezoneOffset() / 60) + offset % 1 * 60);
+  return date;
+}
+
+
 let searchForm = document.querySelector("#enter-city-form");
 searchForm.addEventListener("submit", searchCityTemperature);
 let locationIcon = document.querySelector("#location-button");
 locationIcon.addEventListener("click", getLocation);
-
-if (hours < 10) {
-  hours = `0${hours}`;
-}
-let minutes = now.getMinutes();
-if (minutes < 10) {
-   minutes = `0${minutes}`
-}
-currentTime.innerHTML = `${hours}:${minutes}`;
-
+getCurrentLocalTime(now);
 
 class TheWeather {
   constructor(response) {
+    console.log(response);
     this.tempCels = response.data.main.temp;
     this.city = response.data.name;
     this.countryCode = response.data.sys.country;
@@ -80,6 +101,7 @@ class TheWeather {
     this.clouds = Math.round(response.data.clouds.all);
     this.humidity =  Math.round(response.data.main.humidity);
     this.mainIcon = response.data.weather[0].icon;
+    this.localTimezone = response.data.timezone;
   }
   displayMainForecastInfo() {
     let degree = document.querySelector("#degree");
@@ -89,6 +111,8 @@ class TheWeather {
     currentCity.innerHTML = this.city;
 
     currentCity.insertAdjacentHTML("beforeend", `<span class="country-code">(${this.countryCode})</span>`);
+
+    getCurrentLocalTime(convertTime(new Date(), this.localTimezone / 60 / 60));
 
     let descr = document.querySelector("#descr");
     descr.innerHTML = this.descr;
@@ -127,7 +151,7 @@ class TheWeather {
   }
 
   displayCurrentBackgroundByTheWeatherDescr() {
-    const currentBackground = getCurrentBackgroundByTheWeather(this.descr);
+    const currentBackground = getCurrentBackgroundByTheWeather(this.descr, this.mainIcon);
     if (currentBackground) {
       const main = document.querySelector("main");
       main.style.background = `url(${currentBackground}) center center/cover no-repeat`;
