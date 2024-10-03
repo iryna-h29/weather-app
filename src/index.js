@@ -50,28 +50,35 @@ const descriptions = {
 
 let now = new Date();
 
-function getCurrentLocalTime(timestamp) {
-  console.log(timestamp);
-  let currentDate = document.querySelector("span.date");
-  currentDate.innerHTML = timestamp.getDate();
-  let currentMonth = document.querySelector("span.month");
-  currentMonth.innerHTML = months[timestamp.getMonth()];
-  let currentDay = document.querySelector("span.theday");
-  currentDay.innerHTML = weekDays[timestamp.getDay()];
-  let currentTime = document.querySelector("span.time");
-  let hours = timestamp.getHours();
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
-  let minutes = timestamp.getMinutes();
+function setCurrentLocalTime(currentDate) {
+  // console.log(timestamp);
+  let dateElement = document.querySelector("span.date");
+  dateElement.innerHTML = currentDate.getDate();
+  let monthEl = document.querySelector("span.month");
+  monthEl.innerHTML = months[currentDate.getMonth()];
+  let dayEl = document.querySelector("span.theday");
+  dayEl.innerHTML = weekDays[currentDate.getDay()];
+
+  let timeEl = document.querySelector("span.time");
+  timeEl.innerHTML = `${getHoursFromDate(currentDate)}:${getMinutesFromDate(currentDate)}`;
+}
+
+
+function getMinutesFromDate(date) {
+  let minutes = date.getMinutes();
   if (minutes < 10) {
      minutes = `0${minutes}`
   }
-  currentTime.innerHTML = `${hours}:${minutes}`;
+  return minutes;
 }
-
-function convertTime(date, offset) {
-  console.log(offset);
+function getHoursFromDate(date) {
+  let hours = date.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  return hours;
+}
+function convertTimeToLocal(date, offset) {
   if (offset) {
     offset = parseFloat(offset);
   } else {
@@ -79,16 +86,43 @@ function convertTime(date, offset) {
   }
   
   date.setHours(date.getHours() + (date.getTimezoneOffset() / 60) + offset);
-  date.setMinutes(date.getMinutes() + (date.getTimezoneOffset() / 60) + offset % 1 * 60);
+  // date.setMinutes(date.getMinutes() + (date.getTimezoneOffset() / 60) + offset % 1 * 60);
   return date;
 }
 
+function addHours(date, hours) {
+  const hoursToAdd = hours * 60 * 60 * 1000;
+  date.setTime(date.getTime() + hoursToAdd);
+  return date;
+}
+function formatHours(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let hours = date.getHours();
+  return `${hours}:00`;
+}
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDay();
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return days[day];
+}
+function formatDate(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDate();
+  return day;
+}
+function formatMonth(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let month = date.getMonth();
+  let months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  return months[month];
+}
 
 let searchForm = document.querySelector("#enter-city-form");
 searchForm.addEventListener("submit", searchCityTemperature);
 let locationIcon = document.querySelector("#location-button");
 locationIcon.addEventListener("click", getLocation);
-getCurrentLocalTime(now);
+setCurrentLocalTime(now);
 
 class TheWeather {
   constructor(response) {
@@ -102,8 +136,14 @@ class TheWeather {
     this.humidity =  Math.round(response.data.main.humidity);
     this.mainIcon = response.data.weather[0].icon;
     this.localTimezone = response.data.timezone;
+    this.sunriseTimestamp = response.data.sys.sunrise;
+    this.sunsetTimestamp = response.data.sys.sunset;
   }
   displayMainForecastInfo() {
+    $( ".degrees-symbols" ).show();
+    $( ".weather-conditions" ).show();
+    $( ".sunrise-sunset" ).show();
+
     let degree = document.querySelector("#degree");
     degree.innerHTML = Math.round(this.tempCels);
 
@@ -112,21 +152,31 @@ class TheWeather {
 
     currentCity.insertAdjacentHTML("beforeend", `<span class="country-code">(${this.countryCode})</span>`);
 
-    getCurrentLocalTime(convertTime(new Date(), this.localTimezone / 60 / 60));
+    setCurrentLocalTime(convertTimeToLocal(new Date(), this.localTimezone / 60 / 60));
 
-    let descr = document.querySelector("#descr");
+    const descr = document.querySelector("#descr");
     descr.innerHTML = this.descr;
 
-    let wind = document.querySelector(".wind-speed");
+    const wind = document.querySelector(".wind-speed");
     wind.innerHTML = this.wind;
 
-    let clouds = document.querySelector(".clouds-percent");
+    const clouds = document.querySelector(".clouds-percent");
     clouds.innerHTML = this.clouds; 
 
-    let humidity = document.querySelector(".humidity-percent");
+    const humidity = document.querySelector(".humidity-percent");
     humidity.innerHTML = this.humidity;
+  
+    // console.log();
+    const localSunrise = convertTimeToLocal(new Date(this.sunriseTimestamp * 1000), this.localTimezone / 60 / 60);
+    const localSunset = convertTimeToLocal(new Date(this.sunsetTimestamp * 1000), this.localTimezone / 60 / 60);
+    const sunrise = document.querySelector(".sunrise");
+    const sunset = document.querySelector(".sunset");
+
+    sunrise.innerHTML = `${getHoursFromDate(localSunrise)}:${getMinutesFromDate(localSunrise)}`;
+    sunset.innerHTML = `${getHoursFromDate(localSunset)}:${getMinutesFromDate(localSunset)}`;
   }
   displayMainIcon() {
+    // console.log(this.mainIcon);
     let mainIconWrapper = document.querySelector(".icon-current-weather");
     if (mainIconWrapper.children.length === 0) {
       if (Object.keys(iconsLinks).includes(this.mainIcon)) {
@@ -158,41 +208,18 @@ class TheWeather {
     }
   }
 }
-function formatHours(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let hours = date.getHours();
-  return `${hours}:00`;
-}
-function formatDay(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let day = date.getDay();
-  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  return days[day];
-}
-function formatDate(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let day = date.getDate();
-  return day;
-}
-function formatMonth(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let month = date.getMonth();
-  let months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-  return months[month];
-}
 
-function searchCityTemperature(event) {
+
+async function searchCityTemperature(event) {
   event.preventDefault();
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let cityName = document.querySelector("#enter-city");
   let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&units=metric&appid=${apiKey}`;
-  axios.get(url).then(displayWeather);
+  await axios.get(url).then(displayWeather);
 }
 
 // display the current temp of the city using API
 function displayWeather(response) {
-  $( "#degree-symbols" ).show();
-  $( "#weather-conditions" ).show();
   const newWeatherForecast = new TheWeather(response);
   newWeatherForecast.displayMainForecastInfo();
   newWeatherForecast.displayMainIcon();
@@ -210,7 +237,11 @@ function getForecast(coordinates) {
 
 // Inject data from js to HTML
 function displayForecastHourly(response) {
+  console.log(response.data);
   let forecastHourly = response.data.hourly;
+  let localTimezoneOffset = response.data.timezone_offset / 60 / 60;
+  const currentLocalTime = convertTimeToLocal(new Date(), localTimezoneOffset);
+  // const timestampLocalTime = Date.parse(currentLocalTime);
   let forecastHourlyElement = document.querySelector(".weather-hourly");
   let forecastHourlyHTML = `<div class="hourly-wrapper">`;
   forecastHourly.forEach((hour, index) => {
@@ -218,16 +249,16 @@ function displayForecastHourly(response) {
       forecastHourlyHTML = forecastHourlyHTML + `
       <div class='hour-box'>
         <div>NOW</div>
-        <div>${hour.humidity}%</div>
+        <div class="precipitation">${hour.hasOwnProperty("rain") ? hour.rain['1h']+"mm/h" : hour.hasOwnProperty("snow") ?  hour.snow['1h'] : "\n" }</div>
         <img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${hour.weather[0].description}@2x.png" width="60">
         <div>${Math.round(hour.temp)}</div>
       </div>
       `;
-    } else if (index >= 1 && index < 25) {
+    } else if (index >= 1 && index < 24) {
       forecastHourlyHTML = forecastHourlyHTML + `
       <div class='hour-box'>
-        <div>${formatHours(hour.dt)}</div>
-        <div>${hour.humidity}%</div>
+        <div>${addHours(new Date(currentLocalTime.getTime()), index).getHours()}:00</div>
+        <div class="precipitation">${hour.hasOwnProperty("rain") ? hour.rain['1h']+"mm/h" : hour.hasOwnProperty("snow") ? hour.snow['1h'] : "\n" }</div>
         <img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${hour.weather[0].description}@2x.png" width="60">
         <div>${Math.round(hour.temp)}&deg</div>
       </div>
@@ -246,7 +277,7 @@ function displayForecastDaily(response) {
   forecastDaily.forEach(function(forecastDay, index){
     if (index < 8) {
       forecastHTML = forecastHTML + `
-      <div class="col" id="first-day">
+      <div class="col">
       <div class="box">
       <div class="weekday">${formatDay(forecastDay.dt)}</div>
       <div class="data">${formatDate(forecastDay.dt)}.${formatMonth(forecastDay.dt)}</div>

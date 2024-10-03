@@ -174,6 +174,9 @@ a {
   font-weight: bold;
   display: none;
 }
+.sunrise-sunset {
+  display: none;
+}
 .hourly-wrapper {
   display: flex;
   justify-content: flex-start;
@@ -187,12 +190,19 @@ a {
   padding-bottom: 10px;
   margin-top: 10px;
 }
+.hour-box {
+  display: grid;
+  grid-template-rows: 1fr 1fr 2fr 1fr;
+}
 .hour-box div {
   color:white;
   text-align: center;
   text-shadow: 2px 2px 2px black;
   /* filter: invert(1); */
   /* mix-blend-mode: difference; */
+}
+.hour-box .precipitation {
+  font-size: 10px;
 }
 .descr {
   font-size: 18px;
