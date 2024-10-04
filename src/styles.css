@@ -8,7 +8,6 @@ main {
   /* linear-gradient(359.3deg, rgb(196, 214, 252) 1%, rgba(187, 187, 187, 0) 70.9%); */
   /* linear-gradient(to top, #dfe9f3 0%, white 100%); */
   border-color: blue;
-  border-radius: 6px;
   min-height: 100vh;
 }
 .row {

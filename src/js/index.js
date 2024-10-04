@@ -33,6 +33,7 @@ let iconsLinks = {
   "04d" : 'src/icons/cloud.svg',
   "04n" : 'src/icons/cloud.svg',
   "10d" : 'src/icons/rainy-day.png',
+  "10n" : 'src/icons/cloud-rain.svg',
   "09d" : 'src/icons/heavy-rain.svg'
 } 
 const descriptions = {
@@ -50,19 +51,7 @@ const descriptions = {
 
 let now = new Date();
 
-function setCurrentLocalTime(currentDate) {
-  // console.log(timestamp);
-  let dateElement = document.querySelector("span.date");
-  dateElement.innerHTML = currentDate.getDate();
-  let monthEl = document.querySelector("span.month");
-  monthEl.innerHTML = months[currentDate.getMonth()];
-  let dayEl = document.querySelector("span.theday");
-  dayEl.innerHTML = weekDays[currentDate.getDay()];
-
-  let timeEl = document.querySelector("span.time");
-  timeEl.innerHTML = `${getHoursFromDate(currentDate)}:${getMinutesFromDate(currentDate)}`;
-}
-
+// time Functions: 
 
 function getMinutesFromDate(date) {
   let minutes = date.getMinutes();
@@ -78,6 +67,7 @@ function getHoursFromDate(date) {
   }
   return hours;
 }
+// find local time
 function convertTimeToLocal(date, offset) {
   if (offset) {
     offset = parseFloat(offset);
@@ -118,6 +108,19 @@ function formatMonth(timestamp) {
   return months[month];
 }
 
+function setCurrentLocalTime(currentDate) {
+  // console.log(timestamp);
+  let dateElement = document.querySelector("span.date");
+  dateElement.innerHTML = currentDate.getDate();
+  let monthEl = document.querySelector("span.month");
+  monthEl.innerHTML = months[currentDate.getMonth()];
+  let dayEl = document.querySelector("span.theday");
+  dayEl.innerHTML = weekDays[currentDate.getDay()];
+
+  let timeEl = document.querySelector("span.time");
+  timeEl.innerHTML = `${getHoursFromDate(currentDate)}:${getMinutesFromDate(currentDate)}`;
+}
+
 let searchForm = document.querySelector("#enter-city-form");
 searchForm.addEventListener("submit", searchCityTemperature);
 let locationIcon = document.querySelector("#location-button");
@@ -138,6 +141,8 @@ class TheWeather {
     this.localTimezone = response.data.timezone;
     this.sunriseTimestamp = response.data.sys.sunrise;
     this.sunsetTimestamp = response.data.sys.sunset;
+    this.localSunrise = null;
+    this.localSunset = null;
   }
   displayMainForecastInfo() {
     $( ".degrees-symbols" ).show();
@@ -152,7 +157,8 @@ class TheWeather {
 
     currentCity.insertAdjacentHTML("beforeend", `<span class="country-code">(${this.countryCode})</span>`);
 
-    setCurrentLocalTime(convertTimeToLocal(new Date(), this.localTimezone / 60 / 60));
+    this.localDate = convertTimeToLocal(new Date(), this.localTimezone / 60 / 60);
+    setCurrentLocalTime(this.localDate);
 
     const descr = document.querySelector("#descr");
     descr.innerHTML = this.descr;
@@ -167,13 +173,13 @@ class TheWeather {
     humidity.innerHTML = this.humidity;
   
     // console.log();
-    const localSunrise = convertTimeToLocal(new Date(this.sunriseTimestamp * 1000), this.localTimezone / 60 / 60);
-    const localSunset = convertTimeToLocal(new Date(this.sunsetTimestamp * 1000), this.localTimezone / 60 / 60);
+    this.localSunrise = convertTimeToLocal(new Date(this.sunriseTimestamp * 1000), this.localTimezone / 60 / 60);
+    this.localSunset = convertTimeToLocal(new Date(this.sunsetTimestamp * 1000), this.localTimezone / 60 / 60);
     const sunrise = document.querySelector(".sunrise");
     const sunset = document.querySelector(".sunset");
 
-    sunrise.innerHTML = `${getHoursFromDate(localSunrise)}:${getMinutesFromDate(localSunrise)}`;
-    sunset.innerHTML = `${getHoursFromDate(localSunset)}:${getMinutesFromDate(localSunset)}`;
+    sunrise.innerHTML = `${getHoursFromDate(this.localSunrise)}:${getMinutesFromDate(this.localSunrise)}`;
+    sunset.innerHTML = `${getHoursFromDate(this.localSunset)}:${getMinutesFromDate(this.localSunset)}`;
   }
   displayMainIcon() {
     // console.log(this.mainIcon);
@@ -201,10 +207,16 @@ class TheWeather {
   }
 
   displayCurrentBackgroundByTheWeatherDescr() {
-    const currentBackground = getCurrentBackgroundByTheWeather(this.descr, this.mainIcon);
-    if (currentBackground) {
-      const main = document.querySelector("main");
-      main.style.background = `url(${currentBackground}) center center/cover no-repeat`;
+    // const currentBackground = getCurrentBackgroundByTheWeather(this.descr, this.mainIcon);
+    // if (currentBackground) {
+    //   const main = document.querySelector("main");
+    //   main.style.background = `url(${currentBackground}) center center/cover no-repeat`;
+    // }
+    const main = document.querySelector("main");
+    if (this.localDate <= this.localSunrise || this.localDate >= this.localSunset) {
+      main.style.background = "#191919";
+    } else {
+      main.style.background = "linear-gradient(178.6deg, rgb(181, 222, 248) 3.3%, rgb(252, 253, 255) 109.6%)";
     }
   }
 }
@@ -272,6 +284,7 @@ function displayForecastHourly(response) {
 
 function displayForecastDaily(response) {
   let forecastDaily = response.data.daily;
+  console.log(forecastDaily);
   let forecastElement = document.querySelector("#forecast");
   let forecastHTML = `<div class="row">`;
   forecastDaily.forEach(function(forecastDay, index){
@@ -294,13 +307,14 @@ function displayForecastDaily(response) {
 }
 
 // get current Location and find the weather
-function getCurrentLocation(position) {
+async function getCurrentLocation(position) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let lat = position.coords.latitude;
   let lon = position.coords.longitude;
   let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
-  axios.get(url).then(displayWeather);
+  await axios.get(url).then(displayWeather);
 }
+
 function getLocation(event) {
   event.preventDefault();
   navigator.geolocation.getCurrentPosition(getCurrentLocation);
