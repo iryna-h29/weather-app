@@ -1,4 +1,4 @@
-
+import { getMinutesFromDate , getHoursFromDate , getddFromDate , getMonthFromDate , convertTimeToLocal,  addHours , formatHours , formatDay , formatDate , formatMonth} from "./timeFunctions.js"
 // display the current dates
 let weekDays = [
   "Sunday",
@@ -53,63 +53,7 @@ let now = new Date();
 
 // time Functions: 
 
-function getMinutesFromDate(date) {
-  let minutes = date.getMinutes();
-  if (minutes < 10) {
-     minutes = `0${minutes}`
-  }
-  return minutes;
-}
-function getHoursFromDate(date) {
-  let hours = date.getHours();
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
-  return hours;
-}
-// find local time
-function convertTimeToLocal(date, offset) {
-  if (offset) {
-    offset = parseFloat(offset);
-  } else {
-    offset = 0;
-  }
-  
-  date.setHours(date.getHours() + (date.getTimezoneOffset() / 60) + offset);
-  // date.setMinutes(date.getMinutes() + (date.getTimezoneOffset() / 60) + offset % 1 * 60);
-  return date;
-}
-
-function addHours(date, hours) {
-  const hoursToAdd = hours * 60 * 60 * 1000;
-  date.setTime(date.getTime() + hoursToAdd);
-  return date;
-}
-function formatHours(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let hours = date.getHours();
-  return `${hours}:00`;
-}
-function formatDay(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let day = date.getDay();
-  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  return days[day];
-}
-function formatDate(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let day = date.getDate();
-  return day;
-}
-function formatMonth(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let month = date.getMonth();
-  let months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-  return months[month];
-}
-
 function setCurrentLocalTime(currentDate) {
-  // console.log(timestamp);
   let dateElement = document.querySelector("span.date");
   dateElement.innerHTML = currentDate.getDate();
   let monthEl = document.querySelector("span.month");
@@ -122,10 +66,11 @@ function setCurrentLocalTime(currentDate) {
 }
 
 let searchForm = document.querySelector("#enter-city-form");
-searchForm.addEventListener("submit", searchCityTemperature);
+searchForm.addEventListener("submit", searchForecastByCity);
 let locationIcon = document.querySelector("#location-button");
 locationIcon.addEventListener("click", getLocation);
 setCurrentLocalTime(now);
+
 
 class TheWeather {
   constructor(response) {
@@ -141,6 +86,9 @@ class TheWeather {
     this.localTimezone = response.data.timezone;
     this.sunriseTimestamp = response.data.sys.sunrise;
     this.sunsetTimestamp = response.data.sys.sunset;
+    this.lon = response.data.coord.lon;
+    this.lat = response.data.coord.lat;
+    // 
     this.localSunrise = null;
     this.localSunset = null;
   }
@@ -159,6 +107,7 @@ class TheWeather {
 
     this.localDate = convertTimeToLocal(new Date(), this.localTimezone / 60 / 60);
     setCurrentLocalTime(this.localDate);
+    console.log(this.localDate);
 
     const descr = document.querySelector("#descr");
     descr.innerHTML = this.descr;
@@ -219,10 +168,21 @@ class TheWeather {
       main.style.background = "linear-gradient(178.6deg, rgb(181, 222, 248) 3.3%, rgb(252, 253, 255) 109.6%)";
     }
   }
+
+  searchForecastByDay(index) {
+    // event.preventDefault();
+    let apiKey = "b94116045137cd3444d68aeb165f20bc";
+    console.log(this.localDate);
+    let url = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${this.lat}&lon=${this.lon}&date=${this.localDate.getFullYear()}-${getMonthFromDate(this.localDate)}-${getddFromDate(this.localDate)}&appid=${apiKey}&units=metric`;
+    axios.get(url).then((response) => {
+      console.log(response);
+    });
+  }
 }
 
 
-async function searchCityTemperature(event) {
+
+async function searchForecastByCity(event) {
   event.preventDefault();
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let cityName = document.querySelector("#enter-city");
@@ -236,14 +196,20 @@ function displayWeather(response) {
   newWeatherForecast.displayMainForecastInfo();
   newWeatherForecast.displayMainIcon();
   newWeatherForecast.displayCurrentBackgroundByTheWeatherDescr();
-  getForecast(response.data.coord);
+  getForecast(response.data.coord, newWeatherForecast);
+  
 }
 
 
-function getForecast(coordinates) {
+function getForecast(coordinates, forecastObj) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
-  axios.get(apiUrl).then(displayForecastHourly).then(displayForecastDaily);
+  axios.get(apiUrl).then(displayForecastHourly).then(displayForecastDaily).finally(() => {
+    let boxDaysArr = document.querySelectorAll('.box-day');
+    boxDaysArr.forEach((box, index) => {
+      box.addEventListener("click", forecastObj.searchForecastByDay.bind(forecastObj), index); // як ще один параметр треба передати data в box(перед тим з дата її витягнути в data-)
+    })
+  })
 }
 
 
@@ -291,7 +257,7 @@ function displayForecastDaily(response) {
     if (index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col">
-      <div class="box">
+      <div class="box box-day">
       <div class="weekday">${formatDay(forecastDay.dt)}</div>
       <div class="data">${formatDate(forecastDay.dt)}.${formatMonth(forecastDay.dt)}</div>
       <img src="http://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${forecastDay.weather[0].description}@2x.png" width="60">
