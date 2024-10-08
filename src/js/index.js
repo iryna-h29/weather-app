@@ -51,7 +51,7 @@ const descriptions = {
 
 let now = new Date();
 
-// time Functions: 
+
 
 function setCurrentLocalTime(currentDate) {
   let dateElement = document.querySelector("span.date");
@@ -73,21 +73,22 @@ setCurrentLocalTime(now);
 
 
 class TheWeather {
-  constructor(response) {
-    console.log(response);
-    this.tempCels = response.data.main.temp;
-    this.city = response.data.name;
-    this.countryCode = response.data.sys.country;
-    this.descr = response.data.weather[0].description;
-    this.wind = Math.round(response.data.wind.speed);
-    this.clouds = Math.round(response.data.clouds.all);
-    this.humidity =  Math.round(response.data.main.humidity);
-    this.mainIcon = response.data.weather[0].icon;
-    this.localTimezone = response.data.timezone;
-    this.sunriseTimestamp = response.data.sys.sunrise;
-    this.sunsetTimestamp = response.data.sys.sunset;
-    this.lon = response.data.coord.lon;
-    this.lat = response.data.coord.lat;
+  constructor({ tempCels, city, countryCode, descr, wind, clouds, humidity, mainIcon, localTimezone, sunriseTimestamp, sunsetTimestamp, lon, lat }) {
+    // console.log(weatherObj);
+    this.tempCels = tempCels;
+    this.city = city;
+    this.countryCode = countryCode;
+    this.descr = descr;
+    this.wind = wind;
+    this.clouds = clouds;
+    this.humidity = humidity;
+    this.mainIcon = mainIcon;
+    this.localTimezone = localTimezone;
+    this.sunriseTimestamp = sunriseTimestamp;
+    this.sunsetTimestamp = sunsetTimestamp;
+    this.localDate = convertTimeToLocal(new Date(), this.localTimezone / 60 / 60);
+    this.lon = lon;
+    this.lat = lat;
     // 
     this.localSunrise = null;
     this.localSunset = null;
@@ -105,9 +106,7 @@ class TheWeather {
 
     currentCity.insertAdjacentHTML("beforeend", `<span class="country-code">(${this.countryCode})</span>`);
 
-    this.localDate = convertTimeToLocal(new Date(), this.localTimezone / 60 / 60);
     setCurrentLocalTime(this.localDate);
-    console.log(this.localDate);
 
     const descr = document.querySelector("#descr");
     descr.innerHTML = this.descr;
@@ -169,16 +168,35 @@ class TheWeather {
     }
   }
 
-  searchForecastByDay(index) {
-    // event.preventDefault();
-    let apiKey = "b94116045137cd3444d68aeb165f20bc";
-    console.log(this.localDate);
-    let url = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${this.lat}&lon=${this.lon}&date=${this.localDate.getFullYear()}-${getMonthFromDate(this.localDate)}-${getddFromDate(this.localDate)}&appid=${apiKey}&units=metric`;
-    axios.get(url).then((response) => {
-      console.log(response);
-    });
+  searchForecastByDay(event) { // display Forecast for particular day
+    const box = event.target.closest(".box-day");
+    this.localDate = convertTimeToLocal(new Date(box.dataset.dt * 1000), this.localTimezone / 60 / 60);
+    // setCurrentLocalTime(this.localDate);
+    this.descr = box.dataset.descr;
+    this.wind = box.dataset.wind;
+    this.clouds = box.dataset.clouds;
+    this.humidity = box.dataset.humidity;
+    this.mainIcon = box.dataset.icon;
+    this.tempCels = box.dataset.temp;
+    this.sunriseTimestamp = box.dataset.sunrise;
+    this.sunsetTimestamp = box.dataset.sunset;
+    this.displayMainForecastInfo();
+    this.displayMainIcon();
+
+    // let apiKey = "b94116045137cd3444d68aeb165f20bc";
+    // console.log(this.localDate);
+    // let url = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${this.lat}&lon=${this.lon}&date=${this.localDate.getFullYear()}-${getMonthFromDate(this.localDate)}-${getddFromDate(this.localDate)}&appid=${apiKey}&units=metric`;
+    // axios.get(url).then((response) => {
+    //   console.log(response);
+    // });
   }
 }
+
+// class TheWeatherForParticularDay extends TheWeather {
+//   constructor(response) {
+    
+//   }
+// }
 
 
 
@@ -187,17 +205,36 @@ async function searchForecastByCity(event) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let cityName = document.querySelector("#enter-city");
   let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&units=metric&appid=${apiKey}`;
-  await axios.get(url).then(displayWeather);
+  await axios.get(url).then(getWeatherObj).then(createWeatherObj);
 }
 
 // display the current temp of the city using API
-function displayWeather(response) {
-  const newWeatherForecast = new TheWeather(response);
+function getWeatherObj(response) {
+  // console.log(response);
+  const weather = {};
+  weather.tempCels = response.data.main.temp;
+  weather.city = response.data.name;
+  weather.countryCode = response.data.sys.country;
+  weather.descr = response.data.weather[0].description;
+  weather.wind = response.data.wind.speed;
+  weather.clouds = response.data.clouds.all;
+  weather.humidity = response.data.main.humidity;
+  weather.mainIcon = response.data.weather[0].icon;
+  weather.localTimezone = response.data.timezone;
+  weather.sunriseTimestamp = response.data.sys.sunrise;
+  weather.sunsetTimestamp = response.data.sys.sunset;
+  weather.lon = response.data.coord.lon;
+  weather.lat = response.data.coord.lat;
+  weather.coord = response.data.coord;
+  return weather;
+}
+
+function createWeatherObj(weather) {
+  const newWeatherForecast = new TheWeather(weather);
   newWeatherForecast.displayMainForecastInfo();
   newWeatherForecast.displayMainIcon();
   newWeatherForecast.displayCurrentBackgroundByTheWeatherDescr();
-  getForecast(response.data.coord, newWeatherForecast);
-  
+  getForecast(weather.coord, newWeatherForecast);
 }
 
 
@@ -207,7 +244,8 @@ function getForecast(coordinates, forecastObj) {
   axios.get(apiUrl).then(displayForecastHourly).then(displayForecastDaily).finally(() => {
     let boxDaysArr = document.querySelectorAll('.box-day');
     boxDaysArr.forEach((box, index) => {
-      box.addEventListener("click", forecastObj.searchForecastByDay.bind(forecastObj), index); // як ще один параметр треба передати data в box(перед тим з дата її витягнути в data-)
+      // const datasets = JSON.parse(JSON.stringify(box.dataset));  // як передати датасет
+      box.addEventListener("click", forecastObj.searchForecastByDay.bind(forecastObj) ); 
     })
   })
 }
@@ -257,7 +295,7 @@ function displayForecastDaily(response) {
     if (index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col">
-      <div class="box box-day">
+      <div class="box box-day" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">
       <div class="weekday">${formatDay(forecastDay.dt)}</div>
       <div class="data">${formatDate(forecastDay.dt)}.${formatMonth(forecastDay.dt)}</div>
       <img src="http://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${forecastDay.weather[0].description}@2x.png" width="60">
