@@ -27,8 +27,8 @@
   <body>
   <main>
     <div class="container">
-      <div class="row justify-content-sm-center justify-content-start m-0">
-        <div class="col-7 col-sm-6 p-md-5">
+      <div class="row justify-content-center justify-content-start m-0">
+        <div class="col-8 col-xs-6 p-md-5 p-0">
           <form id="enter-city-form">
             <input
             type="search"
@@ -38,21 +38,16 @@
             autocomplete="off"
             />
         </div>
-        <div class="col-1 col-sm-1 p-0">
+        <div class="col-auto col-xs-1 p-0">
           <button class="search-button" id="search-city" >
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass icon-search"></i>
           </button>
         </div>
         </form>
-        <div class="col-1 col-sm-1 p-0">
+        <div class="col-auto col-xs-1 p-0">
           <button class="location-btn" id="location-button">
             <i class="fa-solid fa-location-dot fa-xl location-icon"></i>
           </button>
-        </div>
-        <div class="col-1 col-sm-1 p-0">
-          <div class="language">
-            EN
-          </div>
         </div>
       </div>
       <div class="form-text">
@@ -64,7 +59,7 @@
           </div>
         </div>
         <div class="col-3 current-temperature">
-          <span class="degree" id="degree"></span><span class="degrees-symbols" id="degree-symbols"><span class="celsius active" id="celsius">&#8451</span> <span class=" fahrenheit inactive" id="fahrenheit">&#8457</span></span>
+          <span class="degree" id="degree"></span><span class="degrees-symbols" id="degree-symbols"><span class="celsius active" id="celsius">&#8451</span>&nbsp<span class=" fahrenheit inactive" id="fahrenheit">&#8457</span></span>
         </div>
         <div class="col-6 online-city">
           <h1 class=current-city id="current-city">The Weather Forecast</h1>
@@ -82,7 +77,7 @@
         <div class="col-1"></div>
       </div>
       <div class="row">
-        <div class="col-6 weather-conditions" id="weather-conditions">
+        <div class="col-md-6 col-12 weather-conditions" id="weather-conditions">
           <span class="descr" id="descr"></span>
           <br />
           <span class="wind">wind: <span class="wind-speed">3</span> km/hour</span>

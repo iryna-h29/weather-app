@@ -290,9 +290,9 @@ function displayForecastDaily(response) {
   let forecastDaily = response.data.daily;
   console.log(forecastDaily);
   let forecastElement = document.querySelector("#forecast");
-  let forecastHTML = `<div class="row">`;
+  let forecastHTML = `<div class="row flex-nowrap row-days">`;
   forecastDaily.forEach(function(forecastDay, index){
-    if (index < 8) {
+    if (index < 7) {
       forecastHTML = forecastHTML + `
       <div class="col">
       <div class="box box-day" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">
@@ -316,7 +316,7 @@ async function getCurrentLocation(position) {
   let lat = position.coords.latitude;
   let lon = position.coords.longitude;
   let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
-  await axios.get(url).then(displayWeather);
+  await axios.get(url).then(getWeatherObj).then(createWeatherObj);
 }
 
 function getLocation(event) {
