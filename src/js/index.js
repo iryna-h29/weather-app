@@ -89,7 +89,6 @@ class TheWeather {
     this.localDate = convertTimeToLocal(new Date(), this.localTimezone / 60 / 60);
     this.lon = lon;
     this.lat = lat;
-    // 
     this.localSunrise = null;
     this.localSunset = null;
   }
@@ -270,7 +269,7 @@ function displayForecastHourly(response) {
         <div>${Math.round(hour.temp)}</div>
       </div>
       `;
-    } else if (index >= 1 && index < 24) {
+    } else if (index >= 1) {
       forecastHourlyHTML = forecastHourlyHTML + `
       <div class='hour-box'>
         <div>${addHours(new Date(currentLocalTime.getTime()), index).getHours()}:00</div>
@@ -292,7 +291,7 @@ function displayForecastDaily(response) {
   let forecastElement = document.querySelector("#forecast");
   let forecastHTML = `<div class="row flex-nowrap row-days">`;
   forecastDaily.forEach(function(forecastDay, index){
-    if (index < 7) {
+    if (index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col">
       <div class="box box-day" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">

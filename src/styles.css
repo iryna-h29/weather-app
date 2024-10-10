@@ -206,7 +206,7 @@ a {
 }
 .hour-box {
   display: grid;
-  grid-template-rows: 1fr 1fr 2fr 1fr;
+  grid-template-rows: 1fr 1fr 2.5fr 1fr;
 }
 .hour-box div {
   color:white;
@@ -276,6 +276,10 @@ a {
   margin: 0 auto;
   display: block;
   text-align: center;
+  font-size: 12px;
+}
+.code-link-section a {
+  font-size: 12px;
 }
 @media(max-width: 800px) {
   .row-days {
@@ -359,5 +363,20 @@ a {
     font-size: 14px;
     margin-left: 0;
     width: auto;
+  }
+  .hour-box div {
+    font-size: 12px;
+  }
+  .box {
+    height: 160px;
+  }
+  .box-day .data, .box-day .weekday {
+    font-size: 16px;
+  }
+  .box-day .upper-bound, .box-day .lower-bound {
+    font-size: 14px;
+  }
+  .weather-hourly {
+    padding: 0;
   }
 }
