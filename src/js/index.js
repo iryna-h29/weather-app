@@ -70,7 +70,32 @@ searchForm.addEventListener("submit", searchForecastByCity);
 let locationIcon = document.querySelector("#location-button");
 locationIcon.addEventListener("click", getLocation);
 setCurrentLocalTime(now);
+const citiesFromLocalStorage = localStorage.getItem('lastSearchCities') ? JSON.parse(localStorage.getItem('lastSearchCities')) : null;
 
+
+if (citiesFromLocalStorage) {
+  displayLastCitiesFromLocalStorage(citiesFromLocalStorage);
+}
+
+function displayLastCitiesFromLocalStorage(citiesFromLocalStorage) {
+  const lastCities = document.querySelector('.last-cities');
+  citiesFromLocalStorage.forEach((city, index) => {
+    if (index === 0) {
+      lastCities.innerHTML = `<a>${city}</a>`;
+    } else {
+      lastCities.innerHTML = lastCities.innerHTML + `<a>${city}</a>`;
+    }
+  })
+  lastCities.querySelectorAll("a").forEach((el) => {
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      let inputSearcher = document.querySelector(".form-control");
+      inputSearcher.value = event.target.textContent;
+      const submitEvent = new Event("submit");
+      searchForm.dispatchEvent(submitEvent);
+    })
+  });
+}
 
 class TheWeather {
   constructor({ tempCels, city, countryCode, descr, wind, clouds, humidity, mainIcon, localTimezone, sunriseTimestamp, sunsetTimestamp, lon, lat }) {
@@ -204,7 +229,7 @@ async function searchForecastByCity(event) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let cityName = document.querySelector("#enter-city");
   let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.value}&units=metric&appid=${apiKey}`;
-  await axios.get(url).then(getWeatherObj).then(createWeatherObj);
+  await axios.get(url).then(getWeatherObj).then(createWeatherObj).then(getForecast);
 }
 
 // display the current temp of the city using API
@@ -230,14 +255,27 @@ function getWeatherObj(response) {
 
 function createWeatherObj(weather) {
   const newWeatherForecast = new TheWeather(weather);
+  if (!localStorage['lastSearchCities']) {
+    localStorage.setItem("lastSearchCities", JSON.stringify([weather.city]));
+  } else {
+    let cities = JSON.parse(localStorage.getItem('lastSearchCities'));
+    if (!cities.includes(weather.city)) {
+      cities.push(weather.city);
+    }
+    if (cities.length > 5) {
+      cities.shift();
+    }
+    localStorage.setItem("lastSearchCities", JSON.stringify(cities));
+    displayLastCitiesFromLocalStorage(cities);
+  }
   newWeatherForecast.displayMainForecastInfo();
   newWeatherForecast.displayMainIcon();
   newWeatherForecast.displayCurrentBackgroundByTheWeatherDescr();
-  getForecast(weather.coord, newWeatherForecast);
+  return [weather.coord, newWeatherForecast];
 }
 
 
-function getForecast(coordinates, forecastObj) {
+function getForecast([ coordinates, forecastObj ]) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayForecastHourly).then(displayForecastDaily).finally(() => {
@@ -252,7 +290,7 @@ function getForecast(coordinates, forecastObj) {
 
 // Inject data from js to HTML
 function displayForecastHourly(response) {
-  console.log(response.data);
+  console.log(response);
   let forecastHourly = response.data.hourly;
   let localTimezoneOffset = response.data.timezone_offset / 60 / 60;
   const currentLocalTime = convertTimeToLocal(new Date(), localTimezoneOffset);
@@ -269,7 +307,7 @@ function displayForecastHourly(response) {
         <div>${Math.round(hour.temp)}</div>
       </div>
       `;
-    } else if (index >= 1) {
+    } else if (index >= 1 && index >= 23) {
       forecastHourlyHTML = forecastHourlyHTML + `
       <div class='hour-box'>
         <div>${addHours(new Date(currentLocalTime.getTime()), index).getHours()}:00</div>
@@ -294,7 +332,7 @@ function displayForecastDaily(response) {
     if (index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col">
-      <div class="box box-day" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">
+      <div class="box box-day" data-index="${index}" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">
       <div class="weekday">${formatDay(forecastDay.dt)}</div>
       <div class="data">${formatDate(forecastDay.dt)}.${formatMonth(forecastDay.dt)}</div>
       <img src="http://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${forecastDay.weather[0].description}@2x.png" width="60">
@@ -311,10 +349,10 @@ function displayForecastDaily(response) {
 
 // get current Location and find the weather
 async function getCurrentLocation(position) {
-  let apiKey = "b94116045137cd3444d68aeb165f20bc";
-  let lat = position.coords.latitude;
-  let lon = position.coords.longitude;
-  let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+  const apiKey = "b94116045137cd3444d68aeb165f20bc";
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
   await axios.get(url).then(getWeatherObj).then(createWeatherObj);
 }
 
@@ -325,7 +363,6 @@ function getLocation(event) {
 
 
 // Celsius - Fah
-
 function changeToCelsius(event) {
   event.preventDefault();
   if (fahrenheitSymbol.matches(".active")) {
