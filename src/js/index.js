@@ -118,7 +118,7 @@ class TheWeather {
     this.localSunset = null;
   }
   displayMainForecastInfo() {
-    $( ".degrees-symbols" ).show();
+    $( ".degrees-symbols" ).css('display', 'inline-flex');;
     $( ".weather-conditions" ).show();
     $( ".sunrise-sunset" ).show();
 
@@ -127,7 +127,7 @@ class TheWeather {
     if (degreeSymbols.querySelector('.celsius').matches(".active")) {
       degree.innerHTML = Math.round(this.tempCels);
     } else {
-      degree.innerHTML = (parseInt(this.tempCels) * 9) / 5 + 32;
+      degree.innerHTML = Math.round((this.tempCels * 9) / 5 + 32);
     }
 
     let currentCity = document.querySelector("#current-city");
@@ -199,7 +199,11 @@ class TheWeather {
 
   searchForecastByDay(event) { // display Forecast for particular day
     const box = event.target.closest(".box-day");
-    this.localDate = convertTimeToLocal(new Date(box.dataset.dt * 1000), this.localTimezone / 60 / 60);
+    if (box.dataset.index != 0) {
+      this.localDate = convertTimeToLocal(new Date(box.dataset.dt * 1000), this.localTimezone / 60 / 60);
+    } else {
+      this.localDate = convertTimeToLocal(new Date(), this.localTimezone / 60 / 60);
+    }
     // setCurrentLocalTime(this.localDate);
     this.descr = box.dataset.descr;
     this.wind = box.dataset.wind;

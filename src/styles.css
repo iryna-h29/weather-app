@@ -152,6 +152,7 @@ a {
 .inactive {
   color: rgba(145, 145, 145, 0.3);
   text-shadow: none;
+  order: 1;
 }
 .inactive:hover {
   cursor: pointer;
@@ -161,6 +162,7 @@ a {
 .active {
   color: white;
   text-shadow: 2px 2px 2px black;
+  order: -1;
 }
 .online-city {
   margin-top: 20px;
@@ -307,6 +309,18 @@ a {
   }
   .current-city {
     font-size: 30px;
+  }
+  .icon-current-weather {
+    img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+  .degree {
+    font-size: 26px;
+  }
+  .degrees-symbols {
+    font-size: 18px;
   }
 }
 @media(max-width: 580px) {
