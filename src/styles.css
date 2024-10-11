@@ -112,7 +112,6 @@ a {
   transition: 1s ease;
 }
 .location-btn {
-  width: 40px;
   height: 40px;
 }
 .search-button:hover {
@@ -333,6 +332,7 @@ a {
   .icon-current-weather {
     img {
       width: 60px;
+      height: 60px;
     }
   }
   .degree {
@@ -372,15 +372,11 @@ a {
     border: none;
     margin-left: 2px;
   }
-  .location-btn {
-    width: 25px;
-    height: 25px;
-  }
   .icon-search {
     font-size: 14px;
   }
   .location-icon {
-    font-size: 16px;
+    font-size: 14px;
     /* margin-left: 2px; */
   }
   .language {
@@ -406,12 +402,18 @@ a {
   .icon-current-weather {
     img {
       width: 30px;
+      height: 30px;
     }
   }
   .last-cities {
     margin: 0;
+    overflow-x: hidden;
+    gap: 3px;
   }
   .last-cities a {
     font-size: 12px;
+  }
+  .weather-conditions {
+    padding-left: 10px; 
   }
 }

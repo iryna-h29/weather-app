@@ -123,7 +123,12 @@ class TheWeather {
     $( ".sunrise-sunset" ).show();
 
     let degree = document.querySelector("#degree");
-    degree.innerHTML = Math.round(this.tempCels);
+    let degreeSymbols = document.querySelector(".degrees-symbols");
+    if (degreeSymbols.querySelector('.celsius').matches(".active")) {
+      degree.innerHTML = Math.round(this.tempCels);
+    } else {
+      degree.innerHTML = (parseInt(this.tempCels) * 9) / 5 + 32;
+    }
 
     let currentCity = document.querySelector("#current-city");
     currentCity.innerHTML = this.city;
@@ -279,13 +284,13 @@ function getForecast([ coordinates, forecastObj ]) {
   let apiKey = "b94116045137cd3444d68aeb165f20bc";
   let apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayForecastHourly).then(displayForecastDaily).finally(() => {
-    let boxDaysArr = document.querySelectorAll('.box-day');
-    boxDaysArr.forEach((box, index) => {
-      // const datasets = JSON.parse(JSON.stringify(box.dataset));  // як передати датасет
-      box.addEventListener("click", forecastObj.searchForecastByDay.bind(forecastObj) ); 
-    })
-  })
-}
+    // let boxDaysArr = document.querySelectorAll('.box-day');
+    // boxDaysArr.forEach((box, index) => {
+    //   box.addEventListener("click", forecastObj.searchForecastByDay.bind(forecastObj) ); 
+    // })
+    document.querySelector(".row-days").addEventListener('click', forecastObj.searchForecastByDay.bind(forecastObj));
+  });
+};
 
 
 // Inject data from js to HTML
