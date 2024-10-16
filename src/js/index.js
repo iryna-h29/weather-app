@@ -340,7 +340,7 @@ function displayForecastDaily(response) {
   forecastDaily.forEach(function(forecastDay, index){
     if (index < 8) {
       forecastHTML = forecastHTML + `
-      <div class="col">
+      <div class="col col-day">
       <div class="box box-day" data-index="${index}" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">
       <div class="weekday">${formatDay(forecastDay.dt)}</div>
       <div class="data">${formatDate(forecastDay.dt)}.${formatMonth(forecastDay.dt)}</div>

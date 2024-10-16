@@ -102,7 +102,7 @@ a {
   width: 40px;
   height: 40px;
   margin-left: 20px;
-  border-radius: 50px;
+  border-radius: 50%;
   border: solid 2px #596aca;
   background-color: #eff1f4;
   color: #42a5f5;
@@ -401,14 +401,18 @@ a {
   .hour-box div {
     font-size: 12px;
   }
+  .col-day {
+    padding: 0 5px;
+  }
   .box {
-    height: 160px;
+    height: 150px;
+    border-width: 2px;
   }
   .box-day .data, .box-day .weekday {
-    font-size: 16px;
+    font-size: 14px;
   }
   .box-day .upper-bound, .box-day .lower-bound {
-    font-size: 14px;
+    font-size: 12px;
   }
   .weather-hourly {
     padding: 0;
