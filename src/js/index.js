@@ -333,13 +333,26 @@ function displayForecastHourly(response) {
   return response;
 }
 
-function displayForecastDaily(response) {
+function displayForecastDaily(response) { 
+  let forecastCurrent = response.data.current;
   let forecastDaily = response.data.daily;
   console.log(forecastDaily);
   let forecastElement = document.querySelector("#forecast");
   let forecastHTML = `<div class="row flex-nowrap row-days">`;
   forecastDaily.forEach(function(forecastDay, index){
-    if (index < 8) {
+    if (index === 0) {
+      forecastHTML = forecastHTML + `
+      <div class="col col-day">
+      <div class="box box-day" data-index="${index}" data-dt="${forecastCurrent.dt}" data-wind="${forecastCurrent.wind_speed}" data-clouds="${forecastCurrent.clouds}" data-humidity="${forecastCurrent.humidity}" data-sunrise="${forecastCurrent.sunrise}" data-sunset="${forecastCurrent.sunset}" data-descr="${forecastCurrent.weather[0].description}" data-icon="${forecastCurrent.weather[0].icon}" data-temp="${forecastCurrent.temp}">
+      <div class="weekday">${formatDay(forecastCurrent.dt)}</div>
+      <div class="data">${formatDate(forecastCurrent.dt)}.${formatMonth(forecastCurrent.dt)}</div>
+      <img src="http://openweathermap.org/img/wn/${forecastCurrent.weather[0].icon}@2x.png" alt="http://openweathermap.org/img/wn/${forecastCurrent.weather[0].description}@2x.png" width="60">
+      <div class="upper-bound">${Math.round(forecastDay.temp.max)}&deg</div>
+      <div class="lower-bound">${Math.round(forecastDay.temp.min)}&deg</div>
+      </div>
+      </div>
+      `;
+    } else if (index > 0 && index < 8) {
       forecastHTML = forecastHTML + `
       <div class="col col-day">
       <div class="box box-day" data-index="${index}" data-dt="${forecastDay.dt}" data-wind="${forecastDay.wind_speed}" data-clouds="${forecastDay.clouds}" data-humidity="${forecastDay.humidity}" data-sunrise="${forecastDay.sunrise}" data-sunset="${forecastDay.sunset}" data-descr="${forecastDay.weather[0].description}" data-icon="${forecastDay.weather[0].icon}" data-temp="${forecastDay.temp.day}">
@@ -363,7 +376,7 @@ async function getCurrentLocation(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
-  await axios.get(url).then(getWeatherObj).then(createWeatherObj);
+  await axios.get(url).then(getWeatherObj).then(createWeatherObj).then(getForecast);;
 }
 
 function getLocation(event) {
