@@ -303,6 +303,7 @@ function displayForecastHourly(response) {
   let forecastHourly = response.data.hourly;
   let localTimezoneOffset = response.data.timezone_offset / 60 / 60;
   const currentLocalTime = convertTimeToLocal(new Date(), localTimezoneOffset);
+  console.log(currentLocalTime); // правильно
   // const timestampLocalTime = Date.parse(currentLocalTime);
   let forecastHourlyElement = document.querySelector(".weather-hourly");
   let forecastHourlyHTML = `<div class="hourly-wrapper">`;
@@ -316,7 +317,7 @@ function displayForecastHourly(response) {
         <div>${Math.round(hour.temp)}</div>
       </div>
       `;
-    } else if (index >= 1 && index >= 23) {
+    } else if (index >= 1 && index <= 23) {
       forecastHourlyHTML = forecastHourlyHTML + `
       <div class='hour-box'>
         <div>${addHours(new Date(currentLocalTime.getTime()), index).getHours()}:00</div>
